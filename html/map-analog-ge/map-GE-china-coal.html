@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        .echartMap div {
+            position: absolute;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body style="height: 100%; margin: 0">
+    <div id="container" style="height: 100%"></div>
+    <script type="text/javascript" src="../../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../js/echarts-all-3.js"></script>
+    <script type="text/javascript" src='../../js/mapbox-gl-dev.js'></script>
+	<script type="text/javascript" src="../../js/EchartsLayer.js"></script>
+    <link href='../../css/mapbox-gl.css' rel='stylesheet' />
+    
+    <script>
+        var map = new mapboxgl.Map({
+            container: 'container', // container id
+            style: {
+                'version': 8,
+                'sources': {},
+                'layers': []
+            },
+            center: [112, 37.94], // starting position
+
+            zoom: 2 // starting zoom
+        })
+        map.addControl(new mapboxgl.NavigationControl())
+            // option2.GLMap.map=map;
+        map.on('load', function () {
+            map.addSource('google.tile', {
+                'type': 'raster',
+                'tiles': ['https://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}'],
+                'tileSize': 256
+            })
+            map.addLayer({
+                'id': 'google',
+                'type': 'raster',
+                'source': 'google.tile'
+            })
+
+            var data = [
+				{name: '大唐托克托', value: 6600, unit: '660MW x 2 + 600MW x 8 + 300MW x 2' },
+				{name: '国电北仑',   value: 6000, unit: '660MW x 2 + 600MW x 8 + 300MW x 2' },
+				{name: '国华粤电台山',   value: 5000, unit: '660MW x 2 + 600MW x 8 + 300MW x 2' },
+				{name: '浙能嘉兴', value: 5000, unit: '660MW x 2 + 600MW x 8 + 300MW x 2' },
+				{name: '华电邹县',   value: 4540, unit: '1000MW x 2 + 600MW x 2 + 335MW x 5' },
+				{name: '中电投平圩', value: 4540, unit: '660MW x 2 + 600MW x 8 + 300MW x 2' },
+				{name: '国华浙能宁海', value: 4400, unit: '660MW x 2 + 600MW x 8 + 300MW x 2'},
+				{name: '华能海门',   value: 4144, unit: '660MW x 2 + 600MW x 8 + 300MW x 2' },
+				{name: '国电泰州',   value: 4000, unit: '1000MW x 4'},
+				{name: '华能玉环',   value: 4000, unit: '1000MW x 4'},
+				{name: '国投北疆',   value: 4000, unit: '1000MW x 4' },
+				{name: '华电句容',   value: 4000, unit: '1000MW x 4' },
+				{name: '申能上海外高桥',   value: 3800, unit: '1000MW x 2 + 900MW x 2' },
+				{name: '国华绥中',   value: 3600, unit: '1000MW x 2 + 800MW x 2' },
+				{name: '粤电惠来靖海',   value: 3200, unit: '1000MW x 2 + 600MW x 2' }
+			];
+            var geoCoordMap = {
+				'大唐托克托':  [111.364213, 40.193399],
+				'国电北仑':[121.809240, 29.943392],
+				'国华粤电台山':[112.922595, 21.867357],
+				'浙能嘉兴':[121.140771, 30.629029],
+				'华电邹县':  [116.920277, 35.323028],
+				'中电投平圩':[116.903496, 32.687175],
+				'国华浙能宁海':[121.515256, 29.479981],
+				'华能海门':  [116.650937, 23.186614],
+				'国电泰州':  [119.916181, 32.190347],
+				'华能玉环':  [121.141572, 28.117184],
+				'国投北疆':  [117.927463, 39.218435],
+				'华电句容':  [119.250076, 32.193653],
+				'申能上海外高桥':  [121.597286, 31.351443],
+				'国华绥中':  [120.009167, 40.082064],
+				'粤电惠来靖海':  [116.548258, 23.008007]
+            };
+
+            var convertData = function (data) {
+                var res = [];
+                for (var i = 0; i < data.length; i++) {
+                    var geoCoord = geoCoordMap[data[i].name];
+                    if (geoCoord) {
+                        res.push({
+                            name: data[i].name,
+                            value: geoCoord.concat(data[i].value).concat(data[i].unit)
+                        });
+                    }
+                }
+                return res;
+            };
+
+            option = {
+                // 页面标题、副标题、链接
+                title: {
+                    text: '中国煤电分布图GE',
+                    subtext: 'by Tianyan,数据截止到2018年底',
+					sublink: 'http://www.fyjs.cn/home.php?mod=space&uid=179031',
+                    left: 'center',
+                    textStyle: {
+                        color: '#272523'
+                    }
+                },
+				// 鼠标悬停事件
+                tooltip: {
+                    trigger: 'item',
+					formatter: function (params) {
+						return params.name + '</br>' + '&nbsp&nbsp&nbspcap: ' + params.value[2] + '&nbspMW' 
+							+ '</br>' + 'unit: ' + params.value[3];
+					}
+                },
+				// 数据分类标准
+                legend: {
+                    orient: 'vertical',
+                    y: 'bottom',
+                    x: 'right',
+                    data: ['Top 3','[100,300)'],
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                GLMap: {
+
+                },
+				// 处理数据展示方式
+                series: [{
+                    name: '[100,300)',
+                    type: 'scatter',
+                    coordinateSystem: 'GLMap',
+                    data: convertData(data.sort(function (a, b) {
+						return b.value - a.value;
+					}).slice(14, data.length)),
+                    symbolSize: function (val) {
+                        return val[2] / 600;
+                    },
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        },
+                        emphasis: {
+                            show: true
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#ddb926'
+                        }
+                    }
+                }, {
+                    name: 'Top 3',
+                    type: 'effectScatter',
+                    coordinateSystem: 'GLMap',
+                    data: convertData(data.sort(function (a, b) {
+                        return b.value - a.value;
+                    }).slice(0, 14)),
+                    symbolSize: function (val) {
+                        return val[2] / 600;
+                    },
+                    showEffectOn: 'render',
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    hoverAnimation: true,
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#f4e925',
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    zlevel: 1
+                }]
+            };
+
+            var echartslayer = new EchartsLayer(map);
+            echartslayer.chart.setOption(option);
+
+        })
+    </script>
+</body>
+
+</html>
