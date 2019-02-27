@@ -1,0 +1,92 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtm1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<base href="<%=basePath%>">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>欢迎登录后台管理系统</title>
+	<link href="css/login.css" rel="stylesheet" type="text/css" />
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="js/login.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	//校验是否为空
+  	function isNull(value) {
+      if (value == undefined || value == null || value == "") {
+          return true;
+      } else {
+          return false;
+      }
+  	}
+  
+  	function login(){
+  		var name = document.getElementById("username").value;
+  		var pwd = document.getElementById("password").value;
+  		if (isNull(name)) {
+  	        alert("请输用户名");
+  	        return false;
+  	    }
+  	    if (isNull(pwd)) {
+  	    	alert("请输入您的密码");
+  	        return false;
+  	    }
+
+		$.ajax({
+			type: "POST",
+            url: "/dataCrawl/login.do",
+            data:{'name':name,'pwd':pwd},
+            //contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            success: function (data) {
+            	if(data.status == 0){
+            		//登录失败
+            		alert(data.errMsg);
+            	}else{
+            		//登录成功
+            		window.location.href='/dataCrawl/jump.do';
+            	}                
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+		});
+  		
+  	}
+	</script>
+</head>
+
+<body>
+<div class="main-login">
+	<div class="login-logo">
+	
+	</div>
+	<div class="login-content">	
+	<input type="hidden" id="path" value="<%=path %>" />
+    <form action="" method="post" id="login-form" name="login-form">
+    <div class="login-info">
+	<span class="user">&nbsp;</span>
+	<input name="username" id="username" type="text" onblur="checkUsername()" value="" class="login-input"/>
+	</div>
+    <div class="login-info">
+	<span class="pwd">&nbsp;</span>
+	<input name="password" id="password" type="password" onblur="checkPassword()" value="" class="login-input"/>
+	</div>
+    <div class="login-oper">
+	<input name="" type="checkbox" value="" checked="checked" />记住密码
+	</div>
+    <div class="login-oper">
+	<input name="" type="button" value="登 录" class="login-btn" onclick="login();"/>
+	<input name="" type="submit" value="重 置" class="login-reset"/>
+	</div>
+    </form>
+    </div>
+    <div class="bottom">技术支持：********有限公司&nbsp;&nbsp;</div>
+</div>   
+</body>
+<div style="text-align:center;">
+<p>来源:<a href="http://www.mycodes.net/" target="_blank">源码之家</a></p>
+</div>
+</html>
