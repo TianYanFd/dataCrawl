@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"     xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd          
+        http://www.springframework.org/schema/context           http://www.springframework.org/schema/context/spring-context-3.2.xsd         
+        http://www.springframework.org/schema/tx           http://www.springframework.org/schema/tx/spring-tx-3.2.xsd         
+        http://www.springframework.org/schema/aop           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+	<!-- 定时器配置 -->
+	<!-- 1、加载代理服务器（DB中状态为1的部分） -->
+	<!-- 定义目标bean  -->
+    <bean id="proxyServerJob" class="com.nstars.util.ProxyServerUtil" />
+    <!-- 定义目标bean中的方法  -->
+    <bean id="loadProxyDetail"  
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="proxyServerJob"/>
+        <property name="targetMethod" value="loadProxyServer"/>  <!-- 要执行的方法名称 -->
+        <property name="concurrent" value="true" />
+    </bean>
+    <!--  触发器  -->
+    <!-- 服务器启动30秒后执行（从打印出"信息: Initializing Spring FrameworkServlet 'dataCrawl'"开始计时）,之后每5分钟一次 -->
+    <bean id="loadProxyTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">  
+        <property name="jobDetail" ref="loadProxyDetail" />
+        <!-- 服务器启动30秒后执行一次 -->
+        <property name="startDelay" value="30000" />
+        <!-- 每隔5分钟执行一次 -->
+        <property name="repeatInterval" value="300000" />
+    </bean>
+  	
+  	<!-- 3、验证代理服务器 （DB中状态为1的部分） -->
+    <bean id="validateProxyDetail"  
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="proxyServerJob"/>
+        <property name="targetMethod" value="validateProxyServer"/>
+        <property name="concurrent" value="true" />
+    </bean>
+    <bean id="validateProxyTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	<property name="jobDetail" ref="validateProxyDetail" />
+    	<property name="cronExpression" value="0 35 8-19 * * ?" />
+    </bean>
+    
+    <!-- 4、采集理服务器（西刺网）  -->  
+    <bean id="crawlProxyDetail"  
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="proxyServerJob"/>
+        <property name="targetMethod" value="crawlProxyServer"/>
+        <property name="concurrent" value="true" />
+    </bean>
+   	<bean id="crawlProxyTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	<property name="jobDetail" ref="crawlProxyDetail" />
+    	<property name="cronExpression" value="0 30 8-19 * * ?" />
+    </bean>
+    
+    <!-- 调度工厂 -->
+    <bean id="SpringJobSchedulerFactoryBean"  
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+            	<!-- 从数据库加载代理服务器 -->
+            	<ref bean="loadProxyTrigger" />
+                <!-- 验证代理服务器 （DB中状态为1的部分） -->
+                <ref bean="validateProxyTrigger" />
+                <!-- 采集理服务器（西刺网）-->
+                <ref bean="crawlProxyTrigger" />
+            </list>
+        </property>
+    </bean>
+</beans>
