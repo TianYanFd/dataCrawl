@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nstars.dao.SysUserDao">
+	<!-- Result Map -->
+	<resultMap id="baseResultMap" type="com.nstars.model.SysUserDomain">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="pwd" property="pwd" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+	
+	<!-- bond_isin table all fields -->
+	<sql id="baseColumnList">
+		id,name,pwd,create_time,update_time,operator 
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="baseWhereClause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="item.id != null">
+				and id=#{item.id}
+			</if>
+			<if test="item.name != null and item.name != ''">
+				and name like concat('%',#{item.name,jdbcType=VARCHAR},'%') 
+			</if>
+			<if test="item.pwd != null and item.pwd != ''">
+				and pwd=#{item.pwd}
+			</if>
+			<if test="item.createTime != null">
+				and create_time=#{item.createTime}
+			</if>
+			<if test="item.updateTime != null">
+				and update_time=#{item.updateTime}
+			</if>
+			<if test="item.operator != null and item.operator != ''">
+				and operator=#{item.operator}
+			</if>
+		</trim>
+	</sql>
+	<sql id="selectiveSetClause">
+		<trim suffixOverrides=",">
+			<if test="item.id != null">
+				id=#{item.id},
+			</if>
+			<if test="item.name != null and item.name != ''">
+				name like concat('%',#{item.name,jdbcType=VARCHAR},'%'), 
+			</if>
+			<if test="item.pwd != null and item.pwd != ''">
+				pwd=#{item.pwd},
+			</if>
+			<if test="item.createTime != null">
+				create_time=#{item.createTime},
+			</if>
+			<if test="item.updateTime != null">
+				update_time=#{item.updateTime},
+			</if>
+			<if test="item.operator != null and item.operator != ''">
+				operator=#{item.operator},
+			</if>
+		</trim>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		sys_user(id,name,pwd,create_time,update_time,operator )
+		values(#{item.id},#{item.name},#{item.pwd},#{item.createTime},#{item.updateTime},#{item.operator})
+	</insert>
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update sys_user set
+		name=#{item.name},pwd=#{item.pwd},create_time=#{item.createTime},update_time=#{item.updateTime},operator=#{item.operator}
+		where id=#{bank.id}
+	</update>
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object">
+		update sys_user set
+		<include refid="selectiveSetClause" />
+		where id=#{item.id}
+	</update>
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from sys_user where
+		id=#{item.id}
+	</delete>
+	<!-- 根据id查询 -->
+	<select id="queryById" resultMap="baseResultMap" parameterType="Object">
+		select
+		<include refid="baseColumnList" />
+		from sys_user where id=#{item.id}
+	</select>
+	<!-- 列表总数 -->
+	<select id="queryByCount" resultType="java.lang.Integer" parameterType="Object">
+		select count(1) from sys_user 
+		<include refid="baseWhereClause" />
+	</select>
+	<!-- 查询列表 -->
+	<select id="queryByList" resultMap="baseResultMap" parameterType="com.nstars.model.BankBasicInfoDomain">
+		select
+		<include refid="baseColumnList" />
+		from sys_user 
+		<include refid="baseWhereClause" />
+	</select>
+	<!-- 以上为工具自动生成 -->
+
+</mapper>

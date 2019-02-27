@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nstars.dao.StCoalStationDao">
+	<!-- Result Map -->
+	<resultMap id="baseResultMap" type="com.nstars.model.StCoalStationDomain">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="owner" property="owner" />
+		<result column="address" property="address" />
+		<result column="longitude" property="longitude" />
+		<result column="latitude" property="latitude" />
+		<result column="capacity" property="capacity" />
+		<result column="install_num" property="installNum" />
+		<result column="com_date" property="comDate" />
+		<result column="decom_date" property="decomDate" />
+		<result column="st_state" property="stState" />
+		<result column="grid" property="grid" />
+		<result column="unit_one_capacity" property="unitOneCapacity" />
+		<result column="unit_one_type" property="unitOneType" />
+		<result column="unit_one_num" property="unitOneNum" />
+		<result column="unit_tow_capacity" property="unitTwoCapacity" />
+		<result column="unit_tow_type" property="unitTwoType" />
+		<result column="unit_tow_num" property="unitTwoNum" />
+		<result column="unit_three_capacity" property="unitThreeCapacity" />
+		<result column="unit_three_type" property="unitThreeType" />
+		<result column="unit_three_num" property="unitThreeNum" />
+		<result column="unit_four_capacity" property="unitFourCapacity" />
+		<result column="unit_four_type" property="unitFourType" />
+		<result column="unit_four_num" property="unitFourNum" />
+		<result column="unit_five_capacity" property="unitFiveCapacity" />
+		<result column="unit_five_type" property="unitFiveType" />
+		<result column="unit_five_num" property="unitFiveNum" />
+		<result column="unit_six_capacity" property="unitSixCapacity" />
+		<result column="unit_six_type" property="unitSixType" />
+		<result column="unit_six_num" property="unitSixNum" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+	
+	<!-- bond_isin table all fields -->
+	<sql id="baseColumnList">
+		id,name,owner,address,longitude,latitude,capacity,install_num,com_date,decom_date,st_state,grid,
+		unit_one_capacity,unit_one_type,unit_one_num,unit_two_capacity,unit_two_type,unit_two_num,
+		unit_three_capacity,unit_three_type,unit_three_num,unit_four_capacity,unit_four_type,unit_four_num,
+		unit_five_capacity,unit_five_type,unit_five_num,unit_six_capacity,unit_six_type,unit_six_num,
+		create_time,update_time,operator  
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="baseWhereClause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="coal.id != null">
+				and id=#{coal.id}
+			</if>
+			<if test="coal.name != null and coal.name != ''">
+				and name like concat('%',#{coal.name,jdbcType=VARCHAR},'%') 
+			</if>
+			<if test="coal.owner != null and coal.owner != ''">
+				and owner=#{coal.owner}
+			</if>
+			<if test="coal.address != null and coal.address != ''">
+				and address like concat('%',#{coal.address,jdbcType=VARCHAR},'%') 
+			</if>
+			<if test="coal.longitude != null and coal.longitude != ''">
+				and longitude=#{coal.longitude}
+			</if>
+			<if test="coal.latitude != null and coal.latitude != ''">
+				and latitude=#{coal.latitude}
+			</if>
+			<if test="coal.capacity != null">
+				and capacity=#{coal.capacity}
+			</if>
+			<if test="coal.installNum != null">
+				and install_num=#{coal.installNum}
+			</if>
+			<if test="coal.comDate != null">
+				and com_date=#{coal.comDate}
+			</if>
+			<if test="coal.decomDate != null">
+				and decom_date=#{coal.decomDate}
+			</if>
+			<if test="coal.stState != null and coal.stState != ''">
+				and st_state=#{coal.stState}
+			</if>
+			<if test="coal.grid != null and coal.grid != ''">
+				and grid=#{coal.grid}
+			</if>
+			<if test="coal.unitOneCapacity != null">
+				and unit_one_capacity=#{coal.unitOneCapacity}
+			</if>
+			<if test="coal.unitOneType != null and coal.unitOneType != ''">
+				and unit_one_type=#{coal.unitOneType}
+			</if>
+			<if test="coal.unitOneNum != null">
+				and unit_one_num=#{coal.unitOneNum}
+			</if>
+			<if test="coal.unitTwoCapacity != null">
+				and unit_two_capacity=#{coal.unitTwoCapacity}
+			</if>
+			<if test="coal.unitTwoType != null and coal.unitTwoType != ''">
+				and unit_two_type=#{coal.unitTwoType}
+			</if>
+			<if test="coal.unitTwoNum != null">
+				and unit_two_num=#{coal.unitTwoNum}
+			</if>
+			<if test="coal.unitThreeCapacity != null">
+				and unit_three_capacity=#{coal.unitThreeCapacity}
+			</if>
+			<if test="coal.unitThreeType != null and coal.unitThreeType != ''">
+				and unit_three_type=#{coal.unitThreeType}
+			</if>
+			<if test="coal.unitOneNum != null">
+				and unit_three_num=#{coal.unitThreeNum}
+			</if>
+			<if test="coal.unitFourCapacity != null">
+				and unit_four_capacity=#{coal.unitFourCapacity}
+			</if>
+			<if test="coal.unitFourType != null and coal.unitFourType != ''">
+				and unit_four_type=#{coal.unitFourType}
+			</if>
+			<if test="coal.unitFourNum != null">
+				and unit_four_num=#{coal.unitFourNum}
+			</if>
+			<if test="coal.unitFiveCapacity != null">
+				and unit_five_capacity=#{coal.unitFiveCapacity}
+			</if>
+			<if test="coal.unitFiveType != null and coal.unitFiveType != ''">
+				and unit_five_type=#{coal.unitFiveType}
+			</if>
+			<if test="coal.unitFiveNum != null">
+				and unit_five_num=#{coal.unitFiveNum}
+			</if>
+			<if test="coal.unitSixCapacity != null">
+				and unit_six_capacity=#{coal.unitSixCapacity}
+			</if>
+			<if test="coal.unitSixType != null and coal.unitSixType != ''">
+				and unit_six_type=#{coal.unitSixType}
+			</if>
+			<if test="coal.unitSixNum != null">
+				and unit_six_num=#{coal.unitSixNum}
+			</if>
+			<if test="coal.createTime != null">
+				and create_time=#{coal.createTime}
+			</if>
+			<if test="coal.updateTime != null">
+				and update_time=#{coal.updateTime}
+			</if>
+			<if test="coal.operator != null and coal.operator != ''">
+				and operator=#{coal.operator}
+			</if>
+		</trim>
+	</sql>
+	<sql id="selectiveSetClause">
+		<trim suffixOverrides=",">
+			<if test="coal.id != null">
+				id=#{coal.id},
+			</if>
+			<if test="coal.name != null and coal.name != ''">
+				name like concat('%',#{coal.name,jdbcType=VARCHAR},'%'),
+			</if>
+			<if test="coal.owner != null and coal.owner != ''">
+				owner=#{coal.owner},
+			</if>
+			<if test="coal.address != null and coal.address != ''">
+				address=#{coal.address},
+			</if>
+			<if test="coal.longitude != null and coal.longitude != ''">
+				longitude=#{coal.longitude},
+			</if>
+			<if test="coal.latitude != null and coal.latitude != ''">
+				latitude=#{coal.latitude},
+			</if>
+			<if test="coal.capacity != null">
+				capacity=#{coal.capacity},
+			</if>
+			<if test="coal.installNum != null">
+				install_num=#{coal.installNum},
+			</if>
+			<if test="coal.comDate != null">
+				com_date=#{coal.comDate},
+			</if>
+			<if test="coal.decomDate != null">
+				decom_date=#{coal.decomDate},
+			</if>
+			<if test="coal.stState != null and coal.stState != ''">
+				st_state=#{coal.stState},
+			</if>
+			<if test="coal.grid != null and coal.grid != ''">
+				grid=#{coal.grid},
+			</if>
+			<if test="coal.unitOneCapacity != null">
+				unit_one_capacity=#{coal.unitOneCapacity},
+			</if>
+			<if test="coal.unitOneType != null and coal.unitOneType != ''">
+				unit_one_type=#{coal.unitOneType},
+			</if>
+			<if test="coal.unitOneNum != null">
+				unit_one_num=#{coal.unitOneNum},
+			</if>
+			<if test="coal.unitTwoCapacity != null">
+				unit_two_capacity=#{coal.unitTwoCapacity},
+			</if>
+			<if test="coal.unitTwoType != null and coal.unitTwoType != ''">
+				unit_two_type=#{coal.unitTwoType},
+			</if>
+			<if test="coal.unitTwoNum != null">
+				unit_two_num=#{coal.unitTwoNum},
+			</if>
+			<if test="coal.unitThreeCapacity != null">
+				unit_three_capacity=#{coal.unitThreeCapacity},
+			</if>
+			<if test="coal.unitThreeType != null and coal.unitThreeType != ''">
+				unit_three_type=#{coal.unitThreeType},
+			</if>
+			<if test="coal.unitOneNum != null">
+				unit_three_num=#{coal.unitThreeNum},
+			</if>
+			<if test="coal.unitFourCapacity != null">
+				unit_four_capacity=#{coal.unitFourCapacity},
+			</if>
+			<if test="coal.unitFourType != null and coal.unitFourType != ''">
+				unit_four_type=#{coal.unitFourType},
+			</if>
+			<if test="coal.unitFourNum != null">
+				unit_four_num=#{coal.unitFourNum},
+			</if>
+			<if test="coal.unitFiveCapacity != null">
+				unit_five_capacity=#{coal.unitFiveCapacity},
+			</if>
+			<if test="coal.unitFiveType != null and coal.unitFiveType != ''">
+				unit_five_type=#{coal.unitFiveType},
+			</if>
+			<if test="coal.unitFiveNum != null">
+				unit_five_num=#{coal.unitFiveNum},
+			</if>
+			<if test="coal.unitSixCapacity != null">
+				unit_six_capacity=#{coal.unitSixCapacity},
+			</if>
+			<if test="coal.unitSixType != null and coal.unitSixType != ''">
+				unit_six_type=#{coal.unitSixType},
+			</if>
+			<if test="coal.unitSixNum != null">
+				unit_six_num=#{coal.unitSixNum},
+			</if>
+			<if test="coal.createTime != null">
+				create_time=#{coal.createTime},
+			</if>
+			<if test="coal.updateTime != null">
+				update_time=#{coal.updateTime},
+			</if>
+			<if test="coal.operator != null and coal.operator != ''">
+				operator=#{coal.operator},
+			</if>
+		</trim>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		st_coal_station(id,name,owner,address,longitude,latitude,capacity,install_num,com_date,decom_date,st_state,grid,
+		unit_one_capacity,unit_one_type,unit_one_num,unit_two_capacity,unit_two_type,unit_two_num,
+		unit_three_capacity,unit_three_type,unit_three_num,unit_four_capacity,unit_four_type,unit_four_num,
+		unit_five_capacity,unit_five_type,unit_five_num,unit_six_capacity,unit_six_type,unit_six_num,
+		create_time,update_time,operator )
+		values(#{coal.id},#{coal.name},#{coal.owner},#{coal.address},#{coal.longitude},#{coal.latitude},
+		#{coal.capacity},#{coal.installNum},#{coal.comDate},#{coal.decomDate},#{coal.stState},#{coal.grid},
+		#{coal.unitOneCapacity},#{coal.unitOneType},#{coal.unitOneNum},
+		#{coal.unitTwoCapacity},#{coal.unitTwoType},#{coal.unitTwoNum},
+		#{coal.unitThreeCapacity},#{coal.unitThreeType},#{coal.unitThreeNum},
+		#{coal.unitFourCapacity},#{coal.unitFourType},#{coal.unitFourNum},
+		#{coal.unitFiveCapacity},#{coal.unitFiveType},#{coal.unitFiveNum},
+		#{coal.unitSixCapacity},#{coal.unitSixType},#{coal.unitSixNum},
+		#{coal.createTime},#{coal.updateTime},#{coal.operator})
+	</insert>
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update st_coal_station set
+		name=#{coal.name},owner=#{coal.owner},address=#{coal.address},longitude=#{coal.longitude},latitude=#{coal.latitude},
+		capacity=#{coal.capacity},install_num=#{coal.installNum},com_date=#{coal.comDate},decom_date=#{coal.decomDate},st_state=#{coal.stState},grid=#{coal.grid},
+		unit_one_capacity=#{coal.unitOneCapacity},unit_one_type=#{coal.unitOneType},unit_one_num=#{coal.unitOneNum},
+		unit_two_capacity=#{coal.unitTwoCapacity},unit_two_type=#{coal.unitTwoType},unit_two_num=#{coal.unitTwoNum},
+		unit_three_capacity=#{coal.unitThreeCapacity},unit_three_type=#{coal.unitThreeType},unit_three_num=#{coal.unitThreeNum},
+		unit_four_capacity=#{coal.unitFourCapacity},unit_four_type=#{coal.unitFourType},unit_four_num=#{coal.unitFourNum},
+		unit_five_capacity=#{coal.unitFiveCapacity},unit_five_type=#{coal.unitFiveType},unit_five_num=#{coal.unitFiveNum},
+		unit_six_capacity=#{coal.unitSixCapacity},unit_six_type=#{coal.unitSixType},unit_six_num=#{coal.unitSixNum},
+		create_time=#{coal.createTime},update_time=#{coal.updateTime},operator=#{coal.operator}
+		where id=#{coal.id}
+	</update>
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object">
+		update st_coal_station set
+		<include refid="selectiveSetClause" />
+		where id=#{coal.id}
+	</update>
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from st_coal_station where
+		id=#{coal.id}
+	</delete>
+	<!-- 根据id查询 -->
+	<select id="queryById" resultMap="baseResultMap" parameterType="Object">
+		select
+		<include refid="baseColumnList" />
+		from st_coal_station where id=#{coal.id}
+	</select>
+	<!-- 列表总数 -->
+	<select id="queryByCount" resultType="java.lang.Integer" parameterType="Object">
+		select count(1) from st_coal_station 
+		<include refid="baseWhereClause" />
+	</select>
+	<!-- 查询列表 -->
+	<select id="queryByList" resultMap="baseResultMap" parameterType="com.nstars.model.StCoalStationDomain">
+		select
+		<include refid="baseColumnList" />
+		from st_coal_station 
+		<include refid="baseWhereClause" />
+	</select>
+	<!-- 以上为工具自动生成 -->
+
+</mapper>

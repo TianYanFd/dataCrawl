@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nstars.dao.ProxyServerDao" > 
+    <resultMap id="baseResultMap" type="com.nstars.model.ProxyServer" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="host" property="host" jdbcType="VARCHAR" />
+        <result column="port" property="port" jdbcType="BIGINT" />
+        <result column="telecom_type" property="telecomType" jdbcType="VARCHAR" />
+        <result column="attribution" property="attribution" jdbcType="VARCHAR" />
+        <result column="load_time" property="loadTime" jdbcType="TIMESTAMP"/>
+        <result column="is_effective" property="isEffective" jdbcType="INTEGER" />
+        <result column="suc_count" property="sucCount" jdbcType="INTEGER" />
+        <result column="fail_count" property="failCount" jdbcType="INTEGER" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <!-- 获取所有代理服务器 -->
+    <select id="getAllProxyServers" resultMap="baseResultMap" >
+        select 
+        	id,host,port,telecom_type,attribution,load_time,is_effective,suc_count,fail_count,update_time   
+        from 
+        	proxy_server
+    </select>
+    
+    <!-- 获取所有有效的代理服务器 -->
+    <select id="getAllEffectiveProxyServers" resultMap="baseResultMap" >
+        select 
+        	id,host,port,telecom_type,attribution,load_time,is_effective,suc_count,fail_count,update_time     
+        from 
+        	proxy_server 
+        where is_effective =1
+    </select>
+    
+    <!-- 更新代理服务器的可用性状态 -->
+    <select id="updateBySective" parameterType="com.nstars.model.ProxyServer" >
+    	update 
+    		proxy_server 
+    	set 
+    		is_effective=#{proxyServer.isEffective},update_time=now()  
+    	where 
+    		id=#{proxyServer.id}
+    </select>
+    
+    <!-- 更新代理服务器的成功失败次数 -->
+    <select id="updateProxyTimes" parameterType="com.nstars.model.ProxyServer" >
+    	update 
+    		proxy_server 
+    	set 
+    		update_time=now(),
+			<if test="proxyServer.attribution != null and proxyServer.attribution == 'fail'">
+			      fail_count=fail_count+1,is_effective=0   
+			</if>
+			<if test="proxyServer.attribution != null and proxyServer.attribution == 'suc'">
+			      suc_count=suc_count+1  
+			</if>
+    	where 
+    		id=#{proxyServer.id}
+    </select>
+    
+    <!-- 获取所有有效的代理服务器 -->
+    <select id="queryProxyBySective" parameterType="com.nstars.model.ProxyServer" resultMap="baseResultMap" >
+        select 
+        	id,host,port,telecom_type,attribution,load_time,is_effective,suc_count,fail_count,update_time     
+        from 
+        	proxy_server 
+        where 
+        	host =#{proxyServer.host}  
+        and 
+        	port =#{proxyServer.port} 
+    </select>
+    
+    <!-- 新增代理服务器 -->
+    <insert id="insertProxyServer" parameterType="com.nstars.model.ProxyServer">
+    	insert into proxy_server(host,port,telecom_type,attribution,load_time,is_effective,suc_count,fail_count,update_time) 
+    	values(#{proxyServer.host},#{proxyServer.port},#{proxyServer.telecomType},#{proxyServer.attribution},
+    	now(),#{proxyServer.isEffective},#{proxyServer.sucCount},#{proxyServer.failCount},now())
+    </insert>
+    
+    <!-- 统计所有有效的代理服务器的数量 -->
+    <select id="countProxyServerEffective" resultType="java.lang.Integer" >
+        select 
+        	count(*)      
+        from 
+        	proxy_server 
+        where is_effective =1
+    </select>
+</mapper>

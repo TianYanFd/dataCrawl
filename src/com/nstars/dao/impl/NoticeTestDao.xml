@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nstars.dao.NoticeTestDao" >
+    <resultMap id="isExistResultMap" type="com.nstars.model.NoticeTest" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+        <result column="issue_date" property="issueDate" jdbcType="DATE" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="load_time" property="loadTime" jdbcType="DATE" />
+    </resultMap>
+    
+    <resultMap id="proxyMap" type="com.nstars.model.ProxyServer" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="host" property="host" jdbcType="VARCHAR" />
+        <result column="port" property="port" jdbcType="BIGINT" />
+        <result column="telecom_type" property="telecomType" jdbcType="VARCHAR" />
+        <result column="attribution" property="attribution" jdbcType="VARCHAR" />
+        <result column="load_time" property="loadTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <!-- 根据文件名和发布日期，查询同业存单信息 -->
+    <select id="getByFileNameAndIssueDate" resultMap="isExistResultMap" >
+        select 
+        	id,file_name,issue_date,type,load_time 
+        from 
+        	notice_test  
+        where 
+        	file_name = #{fileName} and issue_date = #{issueDate}
+    </select>
+    
+    <!-- 保存同业存单 -->
+    <insert id="insertNoticeTest" parameterType="com.nstars.model.NoticeTest">
+    	insert into notice_test(file_name,issue_date,type,load_time) values(#{noticeTest.fileName},#{noticeTest.issueDate},#{noticeTest.type},#{noticeTest.loadTime})
+    </insert>
+    
+    <!-- 根据发布日期，查询同业存单信息 -->
+    <select id="getByIssueDate" resultMap="isExistResultMap" >
+        select 
+        	id,file_name,issue_date,type,load_time 
+        from 
+        	notice_test  
+        where 
+        	issue_date = #{issueDate}
+    </select>
+    
+    
+    <!-- 获取所有代理服务器 -->
+    <select id="getAllProxyServers" resultMap="proxyMap" >
+        select 
+        	id,host,port,telecom_type,attribution,load_time  
+        from 
+        	proxy_server
+    </select>
+    
+    <!-- 根据文件名和发布日期，查询同业存单信息 -->
+    <select id="queryNcdByNameAndDate" parameterType="com.nstars.model.NoticeTest" resultMap="isExistResultMap" >
+        select 
+        	id,file_name,issue_date,type,load_time,DATE_FORMAT(issue_date, '%Y-%m-%d') as issueDateStr 
+        from 
+        	notice_test   
+        where 
+        	1 = 1 
+        <if test="noticeTest.fileName != null">
+        	and file_name like  concat(concat('%',#{noticeTest.fileName}),'%') 
+        </if>
+        <if test="noticeTest.issueDate != null">
+        	and issue_date = #{noticeTest.issueDate} 
+        </if>
+        <if test="noticeTest.type != null">
+        	and type = #{noticeTest.type} 
+        </if>
+    </select>
+    
+</mapper>
+

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nstars.dao.BankBasicInfoDao">
+	<!-- Result Map -->
+	<resultMap id="baseResultMap" type="com.nstars.model.BankBasicInfoDomain">
+		<result column="id" property="id" />
+		<result column="full_name" property="fullName" />
+		<result column="type" property="type" />
+		<result column="province" property="province" />
+		<result column="total_assets" property="totalAssets" />
+		<result column="assets_time" property="assetsTime" />
+		<result column="establish_date" property="establishDate" />
+		<result column="headquarters" property="headquarters" />
+		<result column="short_name" property="shortName" />
+		<result column="short_name_eng" property="shortNameEng" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+	
+	<!-- bond_isin table all fields -->
+	<sql id="baseColumnList">
+		id,full_name,type,province,total_assets,assets_time,establish_date,headquarters,short_name,short_name_eng,create_time,update_time,operator 
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="baseWhereClause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="bank.id != null">
+				and id=#{bank.id}
+			</if>
+			<if test="bank.fullName != null and bank.fullName != ''">
+				and full_name like concat('%',#{bank.fullName,jdbcType=VARCHAR},'%') 
+			</if>
+			<if test="bank.type != null">
+				and type=#{bank.type}
+			</if>
+			<if test="bank.province != null and bank.province != ''">
+				and province=#{bank.province}
+			</if>
+			<if test="bank.totalAssets != null">
+				and total_assets=#{bank.totalAssets}
+			</if>
+			<if test="bank.assetsTime != null and bank.assetsTime != ''">
+				and assets_time=#{bank.assetsTime}
+			</if>
+			<if test="bank.establishDate != null">
+				and establish_date=#{bank.establishDate}
+			</if>
+			<if test="bank.headquarters != null and bank.headquarters != ''">
+				and headquarters=#{bank.headquarters}
+			</if>
+			<if test="bank.shortName != null and bank.shortName !=''">
+				and short_name=#{bank.shortName}
+			</if>
+			<if test="bank.shortNameEng != null and bank.shortNameEng != ''">
+				and short_name_eng=#{bank.shortNameEng}
+			</if>
+			<if test="bank.createTime != null">
+				and create_time=#{bank.createTime}
+			</if>
+			<if test="bank.updateTime != null">
+				and update_time=#{bank.updateTime}
+			</if>
+			<if test="bank.operator != null and bank.operator != ''">
+				and operator=#{bank.operator}
+			</if>
+		</trim>
+	</sql>
+	<sql id="selectiveSetClause">
+		<trim suffixOverrides=",">
+			<if test="bank.id != null">
+				id=#{bank.id},
+			</if>
+			<if test="bank.fullName != null and bank.fullName != ''">
+				full_name=#{bank.fullName},
+			</if>
+			<if test="bank.type != null">
+				type=#{bank.type},
+			</if>
+			<if test="bank.province != null and bank.province != ''">
+				province=#{bank.province},
+			</if>
+			<if test="bank.totalAssets != null">
+				total_assets=#{bank.totalAssets},
+			</if>
+			<if test="bank.assetsTime != null and bank.assetsTime != ''">
+				assets_time=#{bank.assetsTime},
+			</if>
+			<if test="bank.establishDate != null">
+				establish_date=#{bank.establishDate},
+			</if>
+			<if test="bank.headquarters != null and bank.headquarters != ''">
+				headquarters=#{bank.headquarters},
+			</if>
+			<if test="bank.shortName != null and bank.shortName !=''">
+				short_name=#{bank.shortName},
+			</if>
+			<if test="bank.shortNameEng != null and bank.shortNameEng != ''">
+				short_name_eng=#{bank.shortNameEng},
+			</if>
+			<if test="bank.createTime != null">
+				create_time=#{bank.createTime},
+			</if>
+			<if test="bank.updateTime != null">
+				update_time=#{bank.updateTime},
+			</if>
+			<if test="bank.operator != null and bank.operator != ''">
+				operator=#{bank.operator},
+			</if>
+		</trim>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		bank_basic_info(id,full_name,type,province,total_assets,assets_time,establish_date,headquarters,short_name,short_name_eng,create_time,update_time,operator )
+		values(#{bank.id},#{bank.fullName},#{bank.type},#{bank.province},#{bank.totalAssets},#{bank.assetsTime},#{bank.establishDate},#{bank.headquarters},#{bank.shortName},#{bank.shortNameEng},#{bank.createTime},#{bank.updateTime},#{bank.operator})
+	</insert>
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update bank_basic_info set
+		full_name=#{bank.fullName},type=#{bank.type},province=#{bank.province},total_assets=#{bank.totalAssets},assets_time=#{bank.assetsTime},establish_date=#{bank.establishDate},headquarters=#{bank.headquarters},short_name=#{bank.shortName},short_name_eng=#{bank.shortNameEng},create_time=#{bank.createTime},update_time=#{bank.updateTime},operator=#{bank.operator}
+		where id=#{bank.id}
+	</update>
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object">
+		update bank_basic_info set
+		<include refid="selectiveSetClause" />
+		where id=#{bank.id}
+	</update>
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from bank_basic_info where
+		id=#{bank.id}
+	</delete>
+	<!-- 根据id查询 -->
+	<select id="queryById" resultMap="baseResultMap" parameterType="Object">
+		select
+		<include refid="baseColumnList" />
+		from bank_basic_info where id=#{bank.id}
+	</select>
+	<!-- 列表总数 -->
+	<select id="queryByCount" resultType="java.lang.Integer" parameterType="Object">
+		select count(1) from bank_basic_info 
+		<include refid="baseWhereClause" />
+	</select>
+	<!-- 查询列表 -->
+	<select id="queryByList" resultMap="baseResultMap" parameterType="com.nstars.model.BankBasicInfoDomain">
+		select
+		<include refid="baseColumnList" />
+		from bank_basic_info 
+		<include refid="baseWhereClause" />
+	</select>
+	<!-- 以上为工具自动生成 -->
+
+</mapper>

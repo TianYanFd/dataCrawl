@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nstars.dao.StHydroStationDao">
+	<!-- Result Map -->
+	<resultMap id="baseResultMap" type="com.nstars.model.StHydroStationDomain">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="owner" property="owner" />
+		<result column="address" property="address" />
+		<result column="river_id" property="riverId" />
+		<result column="dam_type" property="damType" />
+		<result column="dam_hight" property="damHight" />
+		<result column="reservoir_volume" property="reservoirVolume" />
+		<result column="longitude" property="longitude" />
+		<result column="latitude" property="latitude" />
+		<result column="capacity" property="capacity" />
+		<result column="install_num" property="installNum" />
+		<result column="com_date" property="comDate" />
+		<result column="decom_date" property="decomDate" />
+		<result column="st_state" property="stState" />
+		<result column="grid" property="grid" />
+		<result column="unit_one_capacity" property="unitOneCapacity" />
+		<result column="unit_one_type" property="unitOneType" />
+		<result column="unit_one_num" property="unitOneNum" />
+		<result column="unit_tow_capacity" property="unitTwoCapacity" />
+		<result column="unit_tow_type" property="unitTwoType" />
+		<result column="unit_tow_num" property="unitTwoNum" />
+		<result column="unit_three_capacity" property="unitThreeCapacity" />
+		<result column="unit_three_type" property="unitThreeType" />
+		<result column="unit_three_num" property="unitThreeNum" />
+		<result column="unit_four_capacity" property="unitFourCapacity" />
+		<result column="unit_four_type" property="unitFourType" />
+		<result column="unit_four_num" property="unitFourNum" />
+		<result column="unit_five_capacity" property="unitFiveCapacity" />
+		<result column="unit_five_type" property="unitFiveType" />
+		<result column="unit_five_num" property="unitFiveNum" />
+		<result column="unit_six_capacity" property="unitSixCapacity" />
+		<result column="unit_six_type" property="unitSixType" />
+		<result column="unit_six_num" property="unitSixNum" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+	
+	<!-- bond_isin table all fields -->
+	<sql id="baseColumnList">
+		id,name,owner,address,river_id,dam_type,dam_hight,reservoir_volume,longitude,latitude,
+		capacity,install_num,com_date,decom_date,st_state,grid,
+		unit_one_capacity,unit_one_type,unit_one_num,unit_two_capacity,unit_two_type,unit_two_num,
+		unit_three_capacity,unit_three_type,unit_three_num,unit_four_capacity,unit_four_type,unit_four_num,
+		unit_five_capacity,unit_five_type,unit_five_num,unit_six_capacity,unit_six_type,unit_six_num,
+		create_time,update_time,operator  
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="baseWhereClause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="hydro.id != null">
+				and id=#{hydro.id}
+			</if>
+			<if test="hydro.name != null and hydro.name != ''">
+				and name like concat('%',#{hydro.name,jdbcType=VARCHAR},'%') 
+			</if>
+			<if test="hydro.owner != null and hydro.owner != ''">
+				and owner=#{hydro.owner}
+			</if>
+			<if test="hydro.address != null and hydro.address != ''">
+				and address like concat('%',#{hydro.address,jdbcType=VARCHAR},'%') 
+			</if>
+			<if test="hydro.riverId != null">
+				and river_id=#{hydro.riverId}
+			</if>
+			<if test="hydro.damType != null and hydro.damType != ''">
+				and dam_type=#{hydro.damType}
+			</if>
+			<if test="hydro.damHight != null">
+				and dam_hight=#{hydro.damHight}
+			</if>
+			<if test="hydro.reservoirVolume != null">
+				and reservoir_volume=#{hydro.reservoirVolume}
+			</if>
+			<if test="hydro.longitude != null and hydro.longitude != ''">
+				and longitude=#{hydro.longitude}
+			</if>
+			<if test="hydro.latitude != null and hydro.latitude != ''">
+				and latitude=#{hydro.latitude}
+			</if>
+			<if test="hydro.capacity != null">
+				and capacity=#{hydro.capacity}
+			</if>
+			<if test="hydro.installNum != null">
+				and install_num=#{hydro.installNum}
+			</if>
+			<if test="hydro.comDate != null">
+				and com_date=#{hydro.comDate}
+			</if>
+			<if test="hydro.decomDate != null">
+				and decom_date=#{hydro.decomDate}
+			</if>
+			<if test="hydro.stState != null and hydro.stState != ''">
+				and st_state=#{hydro.stState}
+			</if>
+			<if test="hydro.grid != null and hydro.grid != ''">
+				and grid=#{hydro.grid}
+			</if>
+			<if test="hydro.unitOneCapacity != null">
+				and unit_one_capacity=#{hydro.unitOneCapacity}
+			</if>
+			<if test="hydro.unitOneType != null and hydro.unitOneType != ''">
+				and unit_one_type=#{hydro.unitOneType}
+			</if>
+			<if test="hydro.unitOneNum != null">
+				and unit_one_num=#{hydro.unitOneNum}
+			</if>
+			<if test="hydro.unitTwoCapacity != null">
+				and unit_two_capacity=#{hydro.unitTwoCapacity}
+			</if>
+			<if test="hydro.unitTwoType != null and hydro.unitTwoType != ''">
+				and unit_two_type=#{hydro.unitTwoType}
+			</if>
+			<if test="hydro.unitTwoNum != null">
+				and unit_two_num=#{hydro.unitTwoNum}
+			</if>
+			<if test="hydro.unitThreeCapacity != null">
+				and unit_three_capacity=#{hydro.unitThreeCapacity}
+			</if>
+			<if test="hydro.unitThreeType != null and hydro.unitThreeType != ''">
+				and unit_three_type=#{hydro.unitThreeType}
+			</if>
+			<if test="hydro.unitOneNum != null">
+				and unit_three_num=#{hydro.unitThreeNum}
+			</if>
+			<if test="hydro.unitFourCapacity != null">
+				and unit_four_capacity=#{hydro.unitFourCapacity}
+			</if>
+			<if test="hydro.unitFourType != null and hydro.unitFourType != ''">
+				and unit_four_type=#{hydro.unitFourType}
+			</if>
+			<if test="hydro.unitFourNum != null">
+				and unit_four_num=#{hydro.unitFourNum}
+			</if>
+			<if test="hydro.unitFiveCapacity != null">
+				and unit_five_capacity=#{hydro.unitFiveCapacity}
+			</if>
+			<if test="hydro.unitFiveType != null and hydro.unitFiveType != ''">
+				and unit_five_type=#{hydro.unitFiveType}
+			</if>
+			<if test="hydro.unitFiveNum != null">
+				and unit_five_num=#{hydro.unitFiveNum}
+			</if>
+			<if test="hydro.unitSixCapacity != null">
+				and unit_six_capacity=#{hydro.unitSixCapacity}
+			</if>
+			<if test="hydro.unitSixType != null and hydro.unitSixType != ''">
+				and unit_six_type=#{hydro.unitSixType}
+			</if>
+			<if test="hydro.unitSixNum != null">
+				and unit_six_num=#{hydro.unitSixNum}
+			</if>
+			<if test="hydro.createTime != null">
+				and create_time=#{hydro.createTime}
+			</if>
+			<if test="hydro.updateTime != null">
+				and update_time=#{hydro.updateTime}
+			</if>
+			<if test="hydro.operator != null and hydro.operator != ''">
+				and operator=#{hydro.operator}
+			</if>
+		</trim>
+	</sql>
+	<sql id="selectiveSetClause">
+		<trim suffixOverrides=",">
+			<if test="hydro.id != null">
+				id=#{hydro.id},
+			</if>
+			<if test="hydro.name != null and hydro.name != ''">
+				name like concat('%',#{hydro.name,jdbcType=VARCHAR},'%'),
+			</if>
+			<if test="hydro.owner != null and hydro.owner != ''">
+				owner=#{hydro.owner},
+			</if>
+			<if test="hydro.address != null and hydro.address != ''">
+				address like concat('%',#{hydro.address,jdbcType=VARCHAR},'%'),
+			</if>
+			<if test="hydro.riverId != null">
+				river_id=#{hydro.riverId},
+			</if>
+			<if test="hydro.damType != null and hydro.damType != ''">
+				dam_type=#{hydro.damType},
+			</if>
+			<if test="hydro.damHight != null">
+				dam_hight=#{hydro.damHight},
+			</if>
+			<if test="hydro.reservoirVolume != null">
+				reservoir_volume=#{hydro.reservoirVolume},
+			</if>
+			<if test="hydro.longitude != null and hydro.longitude != ''">
+				longitude=#{hydro.longitude},
+			</if>
+			<if test="hydro.latitude != null and hydro.latitude != ''">
+				latitude=#{hydro.latitude},
+			</if>
+			<if test="hydro.capacity != null">
+				capacity=#{hydro.capacity},
+			</if>
+			<if test="hydro.installNum != null">
+				install_num=#{hydro.installNum},
+			</if>
+			<if test="hydro.comDate != null">
+				com_date=#{hydro.comDate},
+			</if>
+			<if test="hydro.decomDate != null">
+				decom_date=#{hydro.decomDate},
+			</if>
+			<if test="hydro.stState != null and hydro.stState != ''">
+				st_state=#{hydro.stState},
+			</if>
+			<if test="hydro.grid != null and hydro.grid != ''">
+				grid=#{hydro.grid},
+			</if>
+			<if test="hydro.unitOneCapacity != null">
+				unit_one_capacity=#{hydro.unitOneCapacity},
+			</if>
+			<if test="hydro.unitOneType != null and hydro.unitOneType != ''">
+				unit_one_type=#{hydro.unitOneType},
+			</if>
+			<if test="hydro.unitOneNum != null">
+				unit_one_num=#{hydro.unitOneNum},
+			</if>
+			<if test="hydro.unitTwoCapacity != null">
+				unit_two_capacity=#{hydro.unitTwoCapacity},
+			</if>
+			<if test="hydro.unitTwoType != null and hydro.unitTwoType != ''">
+				unit_two_type=#{hydro.unitTwoType},
+			</if>
+			<if test="hydro.unitTwoNum != null">
+				unit_two_num=#{hydro.unitTwoNum},
+			</if>
+			<if test="hydro.unitThreeCapacity != null">
+				unit_three_capacity=#{hydro.unitThreeCapacity},
+			</if>
+			<if test="hydro.unitThreeType != null and hydro.unitThreeType != ''">
+				unit_three_type=#{hydro.unitThreeType},
+			</if>
+			<if test="hydro.unitOneNum != null">
+				unit_three_num=#{hydro.unitThreeNum},
+			</if>
+			<if test="hydro.unitFourCapacity != null">
+				unit_four_capacity=#{hydro.unitFourCapacity},
+			</if>
+			<if test="hydro.unitFourType != null and hydro.unitFourType != ''">
+				unit_four_type=#{hydro.unitFourType},
+			</if>
+			<if test="hydro.unitFourNum != null">
+				unit_four_num=#{hydro.unitFourNum},
+			</if>
+			<if test="hydro.unitFiveCapacity != null">
+				unit_five_capacity=#{hydro.unitFiveCapacity},
+			</if>
+			<if test="hydro.unitFiveType != null and hydro.unitFiveType != ''">
+				unit_five_type=#{hydro.unitFiveType},
+			</if>
+			<if test="hydro.unitFiveNum != null">
+				unit_five_num=#{hydro.unitFiveNum},
+			</if>
+			<if test="hydro.unitSixCapacity != null">
+				unit_six_capacity=#{hydro.unitSixCapacity},
+			</if>
+			<if test="hydro.unitSixType != null and hydro.unitSixType != ''">
+				unit_six_type=#{hydro.unitSixType},
+			</if>
+			<if test="hydro.unitSixNum != null">
+				unit_six_num=#{hydro.unitSixNum},
+			</if>
+			<if test="hydro.createTime != null">
+				create_time=#{hydro.createTime},
+			</if>
+			<if test="hydro.updateTime != null">
+				update_time=#{hydro.updateTime},
+			</if>
+			<if test="hydro.operator != null and hydro.operator != ''">
+				operator=#{hydro.operator},
+			</if>
+		</trim>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="Object">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		st_hydro_station(id,name,owner,address,river_id,dam_type,dam_hight,reservoir_volume,
+		longitude,latitude,capacity,install_num,com_date,decom_date,st_state,grid,
+		unit_one_capacity,unit_one_type,unit_one_num,unit_two_capacity,unit_two_type,unit_two_num,
+		unit_three_capacity,unit_three_type,unit_three_num,unit_four_capacity,unit_four_type,unit_four_num,
+		unit_five_capacity,unit_five_type,unit_five_num,unit_six_capacity,unit_six_type,unit_six_num,
+		create_time,update_time,operator )
+		values(#{hydro.id},#{hydro.name},#{hydro.owner},#{hydro.address},
+		#{hydro.riverId},#{hydro.damType},#{hydro.damHight},#{hydro.reservoirVolume},#{hydro.longitude},#{hydro.latitude},
+		#{hydro.capacity},#{hydro.installNum},#{hydro.comDate},#{hydro.decomDate},#{hydro.stState},#{hydro.grid},
+		#{hydro.unitOneCapacity},#{hydro.unitOneType},#{hydro.unitOneNum},
+		#{hydro.unitTwoCapacity},#{hydro.unitTwoType},#{hydro.unitTwoNum},
+		#{hydro.unitThreeCapacity},#{hydro.unitThreeType},#{hydro.unitThreeNum},
+		#{hydro.unitFourCapacity},#{hydro.unitFourType},#{hydro.unitFourNum},
+		#{hydro.unitFiveCapacity},#{hydro.unitFiveType},#{hydro.unitFiveNum},
+		#{hydro.unitSixCapacity},#{hydro.unitSixType},#{hydro.unitSixNum},
+		#{hydro.createTime},#{hydro.updateTime},#{hydro.operator})
+	</insert>
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update st_hydro_station set
+		name=#{hydro.name},owner=#{hydro.owner},address=#{hydro.address},
+		river_id=#{hydro.riverId},dam_type=#{hydro.damType},dam_hight=#{hydro.damHight},reservoir_volume=#{hydro.reservoirVolume},
+		longitude=#{hydro.longitude},latitude=#{hydro.latitude},
+		capacity=#{hydro.capacity},install_num=#{hydro.installNum},com_date=#{hydro.comDate},decom_date=#{hydro.decomDate},st_state=#{hydro.stState},grid=#{hydro.grid},
+		unit_one_capacity=#{hydro.unitOneCapacity},unit_one_type=#{hydro.unitOneType},unit_one_num=#{hydro.unitOneNum},
+		unit_two_capacity=#{hydro.unitTwoCapacity},unit_two_type=#{hydro.unitTwoType},unit_two_num=#{hydro.unitTwoNum},
+		unit_three_capacity=#{hydro.unitThreeCapacity},unit_three_type=#{hydro.unitThreeType},unit_three_num=#{hydro.unitThreeNum},
+		unit_four_capacity=#{hydro.unitFourCapacity},unit_four_type=#{hydro.unitFourType},unit_four_num=#{hydro.unitFourNum},
+		unit_five_capacity=#{hydro.unitFiveCapacity},unit_five_type=#{hydro.unitFiveType},unit_five_num=#{hydro.unitFiveNum},
+		unit_six_capacity=#{hydro.unitSixCapacity},unit_six_type=#{hydro.unitSixType},unit_six_num=#{hydro.unitSixNum},
+		create_time=#{hydro.createTime},update_time=#{hydro.updateTime},operator=#{hydro.operator}
+		where id=#{hydro.id}
+	</update>
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="Object">
+		update st_hydro_station set
+		<include refid="selectiveSetClause" />
+		where id=#{hydro.id}
+	</update>
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from st_hydro_station where
+		id=#{hydro.id}
+	</delete>
+	<!-- 根据id查询 -->
+	<select id="queryById" resultMap="baseResultMap" parameterType="Object">
+		select
+		<include refid="baseColumnList" />
+		from st_hydro_station where id=#{hydro.id}
+	</select>
+	<!-- 列表总数 -->
+	<select id="queryByCount" resultType="java.lang.Integer" parameterType="Object">
+		select count(1) from st_hydro_station 
+		<include refid="baseWhereClause" />
+	</select>
+	<!-- 查询列表 -->
+	<select id="queryByList" resultMap="baseResultMap" parameterType="com.nstars.model.StHydroStationDomain">
+		select
+		<include refid="baseColumnList" />
+		from st_hydro_station 
+		<include refid="baseWhereClause" />
+	</select>
+	<!-- 以上为工具自动生成 -->
+
+</mapper>
